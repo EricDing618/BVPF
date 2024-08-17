@@ -35,6 +35,8 @@ class PythonFileParser:
                 for j in range(len(c3)):
                     if c3[j][-1]!='\\' and j != 0:
                         self.c2.append(''.join(c3[1:]))
+            else:
+                self.c2.append('')
             self.c1.append(c3[0])
     def getcode(self):
         return self.c1,self.c2
@@ -59,10 +61,10 @@ class FileGenerator:
             c1=dict()
             for code,comment in zip(*parser.getcode()):
                 if not (comment=='' or comment.isspace()):
-                    c1[code]='# '+comment
+                    c1[code]=comment.replace(' ','',0)
                 else:
                     c1[code]=''
-            json5.dump(c1,op.join(outdir,op.splitext(op.basename(parser.fp))[0]+'.json'),indent=4)
+            json5.dump(c1,open(op.join(outdir,op.splitext(op.basename(parser.fp))[0]+'.json'),mode='w',encoding='utf-8'),indent=4,ensure_ascii=False)
 
 def demo():
     run=True
@@ -77,7 +79,7 @@ def demo():
                 print('输入错误！')
             elif mode==0:
                 if op.splitext(op.basename(fp))[-1] in ('.py','.pyw'):
-                    PythonFileParser(fp)
+                    PythonFileParser(fp).run()
                 else:
                     wm=int(input('该文件的格式为{代码:注释}（0）还是{注释:代码}（1）？'))
                     JSONFileParser(fp,wm).run()

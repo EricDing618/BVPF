@@ -1,0 +1,9 @@
+{
+    "class Dog:\n": "",
+    "    def __init__(self,name='Bob') -> None:\n": "",
+    "        print(f\"Hello, I'm {name}\")\n": "",
+    "\n": "",
+    "if __name__=='__main__':\n": "",
+    "    Dog()\n": "",
+    "    Dog('114514')": ""
+}
