@@ -13,9 +13,12 @@ class JSONFileParser:
         if mode!=0:
             self.code,self.comment=self.comment,self.code
 
-    def getcode(self)->tuple[list[str],list[str]]:
+    def getcode(self):
         print(self.code,self.comment)
-        return self.code,self.comment
+        if not self.code:
+            return (),()
+        else:
+            return tuple(self.code),tuple(self.comment)
     
     def run(self):
         exec('\n'.join(self.code))
@@ -47,21 +50,21 @@ class FileGenerator:
         '''
         if mode==0:
             c1=[]
-            for code,comment in zip(parser.getcode()):
+            for code,comment in zip(*parser.getcode()):
                 if not (comment=='' or comment.isspace()):
-                    c1.append(code+'# '+comment)
-            with open(op.join(outdir,op.basename(parser.fp)),'w',encoding='utf-8') as f:
+                    c1.append(code+' # '+comment)
+            with open(op.join(outdir,op.splitext(op.basename(parser.fp))[0]+'.py'),'w',encoding='utf-8') as f:
                 f.writelines(c1)
         else:
             c1=dict()
-            for code,comment in zip(parser.getcode()):
+            for code,comment in zip(*parser.getcode()):
                 if not (comment=='' or comment.isspace()):
                     c1[code]='# '+comment
                 else:
                     c1[code]=''
-            json5.dump(c1,op.join(outdir,op.basename(parser.fp)),indent=4)
+            json5.dump(c1,op.join(outdir,op.splitext(op.basename(parser.fp))[0]+'.json'),indent=4)
 
-if __name__=='__main__':
+def demo():
     run=True
     while run:
         fp=input('输入你的文件绝对路径（退出输入“/quit”）> ')
@@ -80,10 +83,13 @@ if __name__=='__main__':
                     JSONFileParser(fp,wm).run()
                 input('已运行完毕，按回车继续...')
             else:
-                outdir=input('请输入导出的绝对路径> ')
+                outdir=input('请输入导出目录的绝对路径> ')
                 if op.splitext(op.basename(fp))[-1] in ('.py','.pyw'):
                     FileGenerator(PythonFileParser(fp),outdir,1)
                 else:
                     wm=int(input('该文件的格式为{代码:注释}（0）还是{注释:代码}（1）？'))
                     FileGenerator(JSONFileParser(fp,wm),outdir,0)
                 print('导出成功！')
+
+if __name__=='__main__':
+    demo()
