@@ -14,6 +14,7 @@ class JSONFileParser:
             self.code,self.comment=self.comment,self.code
 
     def getcode(self)->tuple[list[str],list[str]]:
+        print(self.code,self.comment)
         return self.code,self.comment
     
     def run(self):
