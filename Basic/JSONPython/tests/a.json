@@ -1,9 +1,13 @@
 {
-    "class Dog:\n": "",
-    "    def __init__(self,name='Bob') -> None:\n": "",
-    "        print(f\"Hello, I'm {name}\")\n": "",
+    "import os\n": "",
     "\n": "",
-    "if __name__=='__main__':\n": "",
-    "    Dog()\n": "",
-    "    Dog('114514')": ""
+    "print('当前路径：',os.getcwd())\n": "",
+    "def fib(n):   ": "  递归式斐波那契数列\n",
+    "    if n == 0:\n": "",
+    "        return 0\n": "",
+    "    elif n == 1:\n": "",
+    "        return 1\n": "",
+    "    else:\n": "",
+    "        return fib(n-1)+fib(n-2)\n": "",
+    "print(fib(10))   ": "  打印第10项值"
 }

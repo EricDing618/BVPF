@@ -1,5 +1,6 @@
 import json5
 import os.path as op
+import os
 
 class JSONFileParser:
     def __init__(self,fp:str,mode=0):
@@ -8,20 +9,25 @@ class JSONFileParser:
             =1:code=values()
         '''
         self.fp=fp
-        self.code:dict=json5.load(open(self.fp,'r',encoding='utf-8'),encoding='utf-8')
+        with open(self.fp,'r',encoding='utf-8') as f:
+            self.code:dict=json5.load(f)
         self.code,self.comment=self.code.keys(),self.code.values()
+        #print(self.code,self.comment) #调试
         if mode!=0:
             self.code,self.comment=self.comment,self.code
 
     def getcode(self):
-        print(self.code,self.comment)
         if not self.code:
             return (),()
         else:
             return tuple(self.code),tuple(self.comment)
     
     def run(self):
-        exec('\n'.join(self.code))
+        temp=f'./Basic/JSONPython/temp/{op.splitext(op.basename(self.fp))[0]}_.py'
+        with open(temp,'w',encoding='utf-8') as f:
+            f.write('\n'.join(self.code))
+        os.system(f'python {temp}')
+        os.remove(temp)
 
 class PythonFileParser:
     def __init__(self,fp:str):
@@ -42,7 +48,10 @@ class PythonFileParser:
         return self.c1,self.c2
     
     def run(self):
-        exec('\n'.join(self.code))
+        #print(''.join(self.code)) #调试
+        os.system(f'python {self.fp}')
+        '''for i in self.code:
+            exec(i)'''
 
 class FileGenerator:
     def __init__(self,parser:JSONFileParser|PythonFileParser,outdir:str,mode=0):
@@ -55,6 +64,8 @@ class FileGenerator:
             for code,comment in zip(*parser.getcode()):
                 if not (comment=='' or comment.isspace()):
                     c1.append(code+' # '+comment)
+                else:
+                    c1.append(code)
             with open(op.join(outdir,op.splitext(op.basename(parser.fp))[0]+'.py'),'w',encoding='utf-8') as f:
                 f.writelines(c1)
         else:
@@ -64,7 +75,8 @@ class FileGenerator:
                     c1[code]=comment.replace(' ','',0)
                 else:
                     c1[code]=''
-            json5.dump(c1,open(op.join(outdir,op.splitext(op.basename(parser.fp))[0]+'.json'),mode='w',encoding='utf-8'),indent=4,ensure_ascii=False)
+            with open(op.join(outdir,op.splitext(op.basename(parser.fp))[0]+'.json'),mode='w',encoding='utf-8') as f:
+                json5.dump(c1,f,indent=4,ensure_ascii=False,separators=(',',': '))
 
 def demo():
     run=True
