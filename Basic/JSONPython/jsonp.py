@@ -1,6 +1,6 @@
 import json5
 import os.path as op
-import os
+import os,shutil
 
 class JSONFileParser:
     def __init__(self,fp:str,mode=0):
@@ -23,7 +23,12 @@ class JSONFileParser:
             return tuple(self.code),tuple(self.comment)
     
     def run(self):
-        temp=f'./Basic/JSONPython/temp/{op.splitext(op.basename(self.fp))[0]}_.py'
+        if not os.path.exists('./Basic/JSONPython'):
+            os.makedirs('./temp',exist_ok=True)
+            temp=f'./temp/{op.splitext(op.basename(self.fp))[0]}_.py'
+        else:
+            os.makedirs("./Basic/JSONPython/temp",exist_ok=True)
+            temp=f'./Basic/JSONPython/temp/{op.splitext(op.basename(self.fp))[0]}_.py'
         with open(temp,'w',encoding='utf-8') as f:
             f.write('\n'.join(self.code))
         os.system(f'python {temp}')
@@ -63,9 +68,9 @@ class FileGenerator:
             c1=[]
             for code,comment in zip(*parser.getcode()):
                 if not (comment=='' or comment.isspace()):
-                    c1.append(code+' # '+comment)
+                    c1.append(f"{code} #{comment}\n")
                 else:
-                    c1.append(code)
+                    c1.append(f"{code}\n")
             with open(op.join(outdir,op.splitext(op.basename(parser.fp))[0]+'.py'),'w',encoding='utf-8') as f:
                 f.writelines(c1)
         else:

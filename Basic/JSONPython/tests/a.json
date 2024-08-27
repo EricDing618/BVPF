@@ -2,12 +2,12 @@
     "import os\n": "",
     "\n": "",
     "print('当前路径：',os.getcwd())\n": "",
-    "def fib(n):   ": "  递归式斐波那契数列\n",
+    "def fib(n):    ": "  递归式斐波那契数列\n",
     "    if n == 0:\n": "",
     "        return 0\n": "",
     "    elif n == 1:\n": "",
     "        return 1\n": "",
     "    else:\n": "",
     "        return fib(n-1)+fib(n-2)\n": "",
-    "print(fib(10))   ": "  打印第10项值"
+    "print(fib(10))    ": "  打印第10项值\n"
 }
