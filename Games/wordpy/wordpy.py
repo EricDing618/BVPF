@@ -2,12 +2,12 @@ from colorama import Fore,Back,init
 from os import system
 from random import randint
 
-from wordlist import wordlist
+from wordlist import *
 
 init(autoreset=True)
 class WordKey:
     def __init__(self,text:str,key:int=3):
-        self.s=text[:-1]
+        self.s=text[:-2]
         self.key = key
         self.alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
         self.encrypt_map = {char: self.alphabet[(i + self.key) % len(self.alphabet)] for i, char in enumerate(self.alphabet)}
@@ -51,12 +51,18 @@ class WordPy:
             if self.invalid_word(w):
                 print(Fore.RED+'Invalid word.')
             else:
-                input('Your word key is: '+WordKey(w+a,int(a)).encode()+a)
+                c=input('Input the number of chances: ')
+                input('Your word key is: '+WordKey(w+c+a,int(a)).encode()+a)
                 self.homepage()
         elif a=='2':
-            w=input('Input your word key: ')
-            w=WordKey(w,int(w[-1])).decode()
-            self.initguess(w,[],6)
+            a=input('Choose one:\n1. Random word.\n2. Use a word key.')
+            if a=='1':
+                w=np.random.choice(wordlist)
+                self.initguess(w,wordlist,6)
+            else:
+                w=input('Input your word key: ')
+                w=WordKey(w,int(w[-1])).decode()
+                self.initguess(w,wordlist,w[-2])
             self.log.append(Fore.BLUE+'The length of word is: '+str(len(w)))
             self.update()
             ok=False
@@ -71,7 +77,7 @@ class WordPy:
         else:
             quit()
     def invalid_word(self,s:str):
-        return not (s.isalpha() and any(i.islower() for i in s))
+        return not (s.isalpha() and any(i.islower() for i in s) and s in self.wordlist)
     def give(self,word:str):
         r:bool
         if self.chance <= 0:
