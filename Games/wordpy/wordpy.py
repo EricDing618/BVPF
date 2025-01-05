@@ -55,7 +55,9 @@ class WordPy:
                 input('Your word key is: '+WordKey(w+c+a,int(a)).encode()+a)
                 self.homepage()
         elif a=='2':
-            a=input('Choose one:\n1. Random word.\n2. Use a word key.')
+            system('cls')
+            print('Choose one:\n1. Random word.\n2. Use a word key.')
+            a=input('> ')
             if a=='1':
                 w=np.random.choice(wordlist)
                 self.initguess(w,wordlist,6)
