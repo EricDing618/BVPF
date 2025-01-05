@@ -2,6 +2,8 @@ from colorama import Fore,Back,init
 from os import system
 from random import randint
 
+from wordlist import wordlist
+
 init(autoreset=True)
 class WordKey:
     def __init__(self,text:str,key:int=3):
@@ -14,6 +16,7 @@ class WordKey:
         return ''.join(self.encrypt_map.get(char, char) for char in self.s)
     def decode(self):
         return ''.join(self.decrypt_map.get(char, char) for char in self.s)
+    
 class WordPy:
     def __init__(self):
         self.homepage()
@@ -98,6 +101,14 @@ class WordPy:
             raise TypeError
         self.update()
         return r
+def __txt_to_py_script():
+    with open('./wordlist.txt','r',encoding='utf-8') as f:
+        a=f.readlines()
+    b=[]
+    for i in a:
+        b.append(i[:-1])
+    with open('./wordlist.py','w',encoding='utf-8') as f:
+        f.write(f'wordlist=array({b})')
 
 if __name__=='__main__':
     WordPy()
