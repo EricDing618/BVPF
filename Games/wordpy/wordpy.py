@@ -16,10 +16,10 @@ class WordKey:
         return ''.join(self.decrypt_map.get(char, char) for char in self.s)
 class WordPy:
     def __init__(self):
-        self.letterstack=[]
-        self.log=[]
         self.homepage()
     def initguess(self,result:str,wordlist:list|tuple,chance:int):
+        self.letterstack=[]
+        self.log=[]
         self.word=result
         self.wordlist=wordlist
         self.chance=chance
@@ -61,6 +61,7 @@ class WordPy:
                     ok=self.give(input('> '))
                 except TypeError:
                     print(Fore.RED+'Invalid input.')
+            self.update()
             input('Press enter to go back...')
             self.homepage()
     def invalid_word(self,s:str):
@@ -70,16 +71,13 @@ class WordPy:
         if self.chance <= 0:
             self.log.append(f'{Fore.YELLOW}You lost! The answer is "{self.word}.')
             r=True
-            self.log=[]
-            self.letterstack=[]
         elif self.invalid_word(word):
             self.log.append(Fore.RED+'Invalid character.')
             r=False
         elif word==self.word:
             self.letterstack.append([Back.GREEN+Fore.WHITE+i for i in word])
+            self.log.append(Fore.GREEN+'You win!')
             r=True
-            self.log=[]
-            self.letterstack=[]
         elif len(word)==len(self.word):
             self.chance-=1
             cache=[]
