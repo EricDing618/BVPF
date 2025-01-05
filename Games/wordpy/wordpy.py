@@ -58,24 +58,27 @@ class WordPy:
             system('cls')
             print('Choose one:\n1. Random word.\n2. Use a word key.')
             a=input('> ')
-            if a=='1':
-                w=np.random.choice(wordlist)
-                self.initguess(w,wordlist,6)
+            if a in ('1','2'):
+                if a=='1':
+                    w=np.random.choice(wordlist)
+                    self.initguess(w,wordlist,6)
+                elif a=='2':
+                    w=input('Input your word key: ')
+                    w=WordKey(w,int(w[-1])).decode()
+                    self.initguess(w,wordlist,w[-2])
+                self.log.append(Fore.BLUE+'The length of word is: '+str(len(w)))
+                self.update()
+                ok=False
+                while ok==False:
+                    try:
+                        ok=self.give(input('> '))
+                    except TypeError:
+                        print(Fore.RED+'Invalid input.')
+                self.update()
+                input('Press enter to go back...')
+                self.homepage()
             else:
-                w=input('Input your word key: ')
-                w=WordKey(w,int(w[-1])).decode()
-                self.initguess(w,wordlist,w[-2])
-            self.log.append(Fore.BLUE+'The length of word is: '+str(len(w)))
-            self.update()
-            ok=False
-            while ok==False:
-                try:
-                    ok=self.give(input('> '))
-                except TypeError:
-                    print(Fore.RED+'Invalid input.')
-            self.update()
-            input('Press enter to go back...')
-            self.homepage()
+                self.homepage()
         else:
             quit()
     def invalid_word(self,s:str):
