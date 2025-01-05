@@ -70,10 +70,14 @@ class WordPy:
                 self.update()
                 ok=False
                 while ok==False:
-                    try:
-                        ok=self.give(input('> '))
-                    except TypeError:
-                        print(Fore.RED+'Invalid input.')
+                    w=input('> ')
+                    if w != '':
+                        try:
+                            ok=self.give(w)
+                        except TypeError:
+                            print(Fore.RED+'Invalid input.')
+                    else:
+                        ok=True
                 self.update()
                 input('Press enter to go back...')
                 self.homepage()
