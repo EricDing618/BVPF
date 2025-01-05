@@ -1,25 +1,31 @@
 from colorama import Fore,Back,init
 from os import system
+from random import randint
 
 init(autoreset=True)
 class WordKey:
-    def __init__(self,string:str):
-        self.s=string
+    def __init__(self,text:str,key:int=3):
+        self.s=text[:-1]
+        self.key = key
+        self.alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        self.encrypt_map = {char: self.alphabet[(i + self.key) % len(self.alphabet)] for i, char in enumerate(self.alphabet)}
+        self.decrypt_map = {char: self.alphabet[(i - self.key) % len(self.alphabet)] for i, char in enumerate(self.alphabet)}
     def encode(self):
-        ...
+        return ''.join(self.encrypt_map.get(char, char) for char in self.s)
     def decode(self):
-        ...
+        return ''.join(self.decrypt_map.get(char, char) for char in self.s)
 class WordPy:
     def __init__(self):
         self.letterstack=[]
         self.log=[]
+        self.homepage()
     def initguess(self,result:str,wordlist:list|tuple,chance:int):
         self.word=result
         self.wordlist=wordlist
         self.chance=chance
     def update(self):
         system('cls')
-        for l in self.letterstuck:
+        for l in self.letterstack:
             print(*l,sep='')
         print('='*(len(self.word)+2))
         for i in self.log:
@@ -33,20 +39,47 @@ class WordPy:
               Back.GREEN+Fore.WHITE+'D',
               Back.YELLOW+Fore.WHITE+'P',
               Back.LIGHTBLACK_EX+Fore.WHITE+'Y']
-        print(*char,sep='')
+        print(*char)
         print('Choose one:\n1. Make a word key.\n2. Guess a word.')
         if input('> ')=='1':
-
-
+            a=str(randint(1,5))
+            w=input('Input your word: ')
+            if self.invalid_word(w):
+                print(Fore.RED+'Invalid word.')
+            else:
+                input('Your word key is: '+WordKey(w+a,int(a)).encode()+a)
+                self.homepage()
+        else:
+            w=input('Input your word key: ')
+            w=WordKey(w,int(w[-1])).decode()
+            self.initguess(w,[],6)
+            self.log.append(Fore.BLUE+'The length of word is: '+str(len(w)))
+            self.update()
+            ok=False
+            while ok==False:
+                try:
+                    ok=self.give(input('> '))
+                except TypeError:
+                    print(Fore.RED+'Invalid input.')
+            input('Press enter to go back...')
+            self.homepage()
+    def invalid_word(self,s:str):
+        return not (s.isalpha() and any(i.islower() for i in s))
     def give(self,word:str):
+        r:bool
         if self.chance <= 0:
             self.log.append(f'{Fore.YELLOW}You lost! The answer is "{self.word}.')
-        elif not word.isalpha():
+            r=True
+            self.log=[]
+            self.letterstack=[]
+        elif self.invalid_word(word):
             self.log.append(Fore.RED+'Invalid character.')
-            return False
+            r=False
         elif word==self.word:
             self.letterstack.append([Back.GREEN+Fore.WHITE+i for i in word])
-            return True
+            r=True
+            self.log=[]
+            self.letterstack=[]
         elif len(word)==len(self.word):
             self.chance-=1
             cache=[]
@@ -58,9 +91,11 @@ class WordPy:
                 else:
                     cache.append(Back.LIGHTBLACK_EX+Fore.WHITE+word[i])
             self.letterstack.append(cache)
-            return False
+            r=False
         else:
             raise TypeError
         self.update()
+        return r
 
 if __name__=='__main__':
+    WordPy()
