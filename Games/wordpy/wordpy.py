@@ -41,7 +41,8 @@ class WordPy:
               Back.LIGHTBLACK_EX+Fore.WHITE+'Y']
         print(*char)
         print('Choose one:\n1. Make a word key.\n2. Guess a word.')
-        if input('> ')=='1':
+        a=input('> ')
+        if a=='1':
             a=str(randint(1,5))
             w=input('Input your word: ')
             if self.invalid_word(w):
@@ -49,7 +50,7 @@ class WordPy:
             else:
                 input('Your word key is: '+WordKey(w+a,int(a)).encode()+a)
                 self.homepage()
-        else:
+        elif a=='2':
             w=input('Input your word key: ')
             w=WordKey(w,int(w[-1])).decode()
             self.initguess(w,[],6)
@@ -64,12 +65,14 @@ class WordPy:
             self.update()
             input('Press enter to go back...')
             self.homepage()
+        else:
+            quit()
     def invalid_word(self,s:str):
         return not (s.isalpha() and any(i.islower() for i in s))
     def give(self,word:str):
         r:bool
         if self.chance <= 0:
-            self.log.append(f'{Fore.YELLOW}You lost! The answer is "{self.word}.')
+            self.log.append(f'{Fore.YELLOW}You lost! The answer is "{self.word}".')
             r=True
         elif self.invalid_word(word):
             self.log.append(Fore.RED+'Invalid character.')
@@ -88,6 +91,7 @@ class WordPy:
                     cache.append(Back.YELLOW+Fore.WHITE+word[i])
                 else:
                     cache.append(Back.LIGHTBLACK_EX+Fore.WHITE+word[i])
+            self.log.append(Fore.YELLOW+'You have only '+str(self.chance)+' chances.')
             self.letterstack.append(cache)
             r=False
         else:
