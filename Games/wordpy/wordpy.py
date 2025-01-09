@@ -42,7 +42,7 @@ class WordPy:
               Back.GREEN+Fore.WHITE+'D',
               Back.YELLOW+Fore.WHITE+'P',
               Back.LIGHTBLACK_EX+Fore.WHITE+'Y']
-        print(*char)
+        print(*char,sep='')
         print('Choose one:\n1. Make a word key.\n2. Guess a word.')
         a=input('> ')
         if a=='1':
