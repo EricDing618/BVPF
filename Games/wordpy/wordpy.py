@@ -1,30 +1,35 @@
 from colorama import Fore,Back,init
 from os import system
 from random import randint
+import re
 
 from wordlist import *
 
 init(autoreset=True)
 class WordKey:
     def __init__(self,text:str,key:int=3):
-        self.s=text[:-2]
+        self.chance=re.findall(r'\d+',text)[-1]
+        self.s=text.replace(self.c,'')
         self.key = key
         self.alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
         self.encrypt_map = {char: self.alphabet[(i + self.key) % len(self.alphabet)] for i, char in enumerate(self.alphabet)}
         self.decrypt_map = {char: self.alphabet[(i - self.key) % len(self.alphabet)] for i, char in enumerate(self.alphabet)}
     def encode(self):
-        return ''.join(self.encrypt_map.get(char, char) for char in self.s)
+        return ''.join(self.encrypt_map.get(char, char) for char in self.s)+self.chance+self.key
     def decode(self):
-        return ''.join(self.decrypt_map.get(char, char) for char in self.s)
+        return [''.join(self.decrypt_map.get(char, char) for char in self.s),self.chance,self.key]
     
 class WordPy:
-    def __init__(self):
-        self.homepage()
-    def initguess(self,result:str,wordlist:list|tuple,chance:int):
+    def __init__(self,run=True):
+        self.wordlist=wordlist
+        if run:
+            self.homepage()
+    def initguess(self,result:str,chance:int,wordlist:list|tuple=None):
         self.letterstack=[]
         self.log=[]
         self.word=result
-        self.wordlist=wordlist
+        if wordlist:
+            self.wordlist=wordlist
         self.chance=chance
     def update(self):
         system('cls')
@@ -46,29 +51,30 @@ class WordPy:
         print('Choose one:\n1. Make a word key.\n2. Guess a word.')
         a=input('> ')
         if a=='1':
-            a=str(randint(1,5))
+            a=str(randint(1,9))
             w=input('Input your word: ')
             if self.invalid_word(w):
                 print(Fore.RED+'Invalid word.')
             else:
                 c=input('Input the number of chances: ')
-                input('Your word key is: '+WordKey(w+c+a,int(a)).encode()+a)
+                input('Your word key is: '+WordKey(w+c+a,int(a)).encode())
                 self.homepage()
         elif a=='2':
             system('cls')
             print('Choose one:\n1. Random word.\n2. Use a word key.')
             a=input('> ')
             if a in ('1','2'):
-                if a=='1':
+                if a=='1': #随机进行猜单词
                     w=np.random.choice(wordlist)
-                    self.initguess(w,wordlist,6)
-                elif a=='2':
+                    self.initguess(w,6)
+                elif a=='2': #使用出题者提供的密钥
                     w=input('Input your word key: ')
                     w=WordKey(w,int(w[-1])).decode()
-                    self.initguess(w,wordlist,w[-2])
+                    self.initguess(w,w[-2])
                 self.log.append(Fore.BLUE+'The length of word is: '+str(len(w)))
                 self.update()
                 ok=False
+                print(w)
                 while ok==False:
                     w=input('> ')
                     if w != '':
