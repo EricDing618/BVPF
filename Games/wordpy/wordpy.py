@@ -27,7 +27,7 @@ class WordPy:
     def initguess(self,result:str,chance:int,wordlist:list|tuple=None):
         self.letterstack=[]
         self.log=[]
-        self.word=result[0]
+        self.word=result if isinstance(result,str) else result[0] #史山一行暴力清除bug
         if wordlist:
             self.wordlist=wordlist
         self.chance=chance
