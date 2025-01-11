@@ -33,7 +33,7 @@ class WordPy:
         self.chance=chance
     def update(self):
         system('cls')
-        print(self.word)
+        #print(self.word)
         for l in self.letterstack:
             print(*l,sep='')
         print('='*(len(self.word)+2))
@@ -72,7 +72,7 @@ class WordPy:
                     w=input('Input your word key: ')
                     w=WordKey(w,int(w[-1])).decode()
                     self.initguess(w,w[-2])
-                self.log.append(Fore.BLUE+'The length of word is: '+str(len(w[0])))
+                self.log.append(Fore.BLUE+'The length of word is: '+str(len(self.word)))
                 self.update()
                 ok=False
                 while ok==False:
