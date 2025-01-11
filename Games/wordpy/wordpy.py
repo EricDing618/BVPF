@@ -17,7 +17,7 @@ class WordKey:
     def encode(self):
         return ''.join(self.encrypt_map.get(char, char) for char in self.s)+self.chance+str(self.key)
     def decode(self):
-        return [''.join(self.decrypt_map.get(char, char) for char in self.s),int(self.chance),self.key]
+        return [''.join(self.decrypt_map.get(char, char) for char in self.s),int(self.chance[:-1]),self.key]
     
 class WordPy:
     def __init__(self,run=True):
@@ -27,7 +27,7 @@ class WordPy:
     def initguess(self,result:str,chance:int,wordlist:list|tuple=None):
         self.letterstack=[]
         self.log=[]
-        self.word=result if isinstance(result,str) else result[0] #史山一行暴力清除bug
+        self.word=result if isinstance(result,str) else result[0] #史山一行暴力清除bug，后续有时间会努力找到根源
         if wordlist:
             self.wordlist=wordlist
         self.chance=chance
@@ -69,8 +69,8 @@ class WordPy:
                     w=np.random.choice(wordlist)
                     self.initguess(w,6)
                 elif a=='2': #使用出题者提供的密钥
-                    w=input('Input your word key: ')
-                    w=WordKey(w,int(w[-1])).decode()
+                    wk=input('Input your word key: ')
+                    w=WordKey(wk,int(wk[-1])).decode()
                     self.initguess(w,w[-2])
                 self.log.append(Fore.BLUE+'The length of word is: '+str(len(self.word)))
                 self.update()
