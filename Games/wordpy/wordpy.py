@@ -55,6 +55,7 @@ class WordPy:
             a=str(randint(1,9))
             w=input('Input your word: ')
             if self.invalid_word(w):
+                self.homepage()
                 print(Fore.RED+'Invalid word.')
             else:
                 c=input('Input the number of chances: ')
