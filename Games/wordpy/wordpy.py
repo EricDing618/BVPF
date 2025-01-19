@@ -5,7 +5,7 @@ import re
 import time
 
 print('Importing wordlist...')
-from wordlist import *
+from wordlist import * #感谢Jssmme/wordle仓库的词库
 
 init(autoreset=True)
 class WordKey: #单词密钥加解密
