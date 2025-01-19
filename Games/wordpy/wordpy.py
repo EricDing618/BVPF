@@ -1,11 +1,12 @@
+#author: EricDing618
+print('Importing wordlist...')
+from wordlist import * #感谢Jssmme/wordle仓库的词库
+
 from colorama import Fore,Back,init
 from os import system
 from random import randint
 import re
 import time
-
-print('Importing wordlist...')
-from wordlist import * #感谢Jssmme/wordle仓库的词库
 
 init(autoreset=True)
 class WordKey: #单词密钥加解密
@@ -21,7 +22,7 @@ class WordKey: #单词密钥加解密
     def decode(self):
         return [''.join(self.decrypt_map.get(char, char) for char in self.s),int(self.chance[:-1]),self.key]
     
-class WordPy:
+class WordPy: #核心
     def __init__(self,run=True):
         self.wordlist=wordlist
         if run:
@@ -30,7 +31,7 @@ class WordPy:
         self.letterstack=[]
         self.log=[]
         self.word=result if isinstance(result,str) else result[0] #史山一行暴力清除bug，后续有时间会努力找到根源
-        if wordlist:
+        if wordlist: #你可以在这里修改词库！
             self.wordlist=wordlist
         self.chance=chance
     def update(self): #更新单词状态及日志
@@ -56,13 +57,16 @@ class WordPy:
         if a=='1': #获取单词密钥
             a=str(randint(1,9))
             w=input('Input your word: ')
-            if self.invalid_word(w): #单词是否非法
+            if w=='':
                 self.homepage()
-                print(Fore.RED+'Invalid word.')
             else:
-                c=input('Input the number of chances: ')
-                input('Your word key is: '+WordKey(w+c,int(a)).encode())
-                self.homepage()
+                if self.invalid_word(w): #单词是否非法
+                    input(Fore.RED+'Invalid word.')
+                    self.homepage()
+                else:
+                    c=input('Input the number of chances: ')
+                    input('Your word key is: '+WordKey(w+c,int(a)).encode())
+                    self.homepage()
         elif a=='2': #猜单词
             self.guess()
         else:
@@ -116,11 +120,11 @@ class WordPy:
         elif len(word)==len(self.word):
             self.chance-=1
             if self.chance <= 0:
-                self.log.append(f'{Fore.YELLOW}You lost! The answer is "{self.word}".')
+                self.log.append(f'{Fore.YELLOW}You lost! The word was "{self.word}".')
                 r=True
             else:
                 cache=[]
-                for i in range(len(word)):
+                for i in range(len(word)): #字母高亮核心
                     if word[i]==self.word[i]:
                         cache.append(Back.GREEN+Fore.WHITE+word[i])
                     elif word[i] in self.word:
@@ -136,14 +140,14 @@ class WordPy:
             raise TypeError
         self.update()
         return r
-def __txt_to_py_script():
+def __txt_to_py_script(): #用于转换一般词库
     with open('./wordlist.txt','r',encoding='utf-8') as f:
         a=f.readlines()
     b=[]
     for i in a:
         b.append(i[:-1])
     with open('./wordlist.py','w',encoding='utf-8') as f:
-        f.write(f'wordlist=array({b})')
+        f.write(f'import numpy as np\nwordlist=np.array({b})')
 
 if __name__=='__main__':
     WordPy()
