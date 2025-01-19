@@ -64,17 +64,22 @@ class WordPy:
                 input('Your word key is: '+WordKey(w+c,int(a)).encode())
                 self.homepage()
         elif a=='2': #猜单词
-            system('cls')
-            print('Choose one:\n1. Random word.\n2. Use a word key.')
-            a=input('> ')
-            if a in ('1','2'):
-                if a=='1': #随机进行猜单词
-                    w=np.random.choice(wordlist)
-                    self.initguess(w,6)
-                elif a=='2': #使用出题者提供的密钥
-                    wk=input('Input your word key: ')
-                    w=WordKey(wk,int(wk[-1])).decode()
-                    self.initguess(w,w[-2])
+            self.guess()
+        else:
+            quit()
+    def guess(self):
+        system('cls')
+        print('Choose one:\n1. Random word.\n2. Use a word key.')
+        a=input('> ')
+        if a in ('1','2'):
+            if a=='1': #随机进行猜单词
+                w=np.random.choice(wordlist)
+                self.initguess(w,6)
+            elif a=='2': #使用出题者提供的密钥
+                wk=input('Input your word key: ')
+                w=WordKey(wk,int(wk[-1])).decode()
+                self.initguess(w,w[-2])
+            if not self.invalid_word(self.word):
                 self.log.append(Fore.BLUE+'The length of word is: '+str(len(self.word)))
                 self.update()
                 ok=False
@@ -91,10 +96,12 @@ class WordPy:
                 self.update()
                 input('Press enter to go back...')
                 self.homepage()
-            else:
-                self.homepage()
+            else: #防止非法密钥bug
+                input(Fore.RED+'Invalid key.')
+                self.guess()
         else:
-            quit()
+            self.homepage()
+            
     def invalid_word(self,s:str): #判断该单词是否无效
         return not (s.isalpha() and any(i.islower() for i in s) and s in self.wordlist)
     def give(self,word:str):
