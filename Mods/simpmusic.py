@@ -52,7 +52,7 @@ class SimpleScorePlayer:
         notes = score_str.replace(',', ' ').split()
         return notes
     
-    def create_midi(self, notes:list[str], output_file='output.mid'):
+    def create_midi(self, notes:list[str|int]|str, output_file='output.mid'):
         """根据音符列表创建MIDI文件"""
         self.mid.tracks.append(self.track)
         
@@ -65,6 +65,7 @@ class SimpleScorePlayer:
         
         # 添加音符
         for note in notes:
+            note = str(note)
             if note in self.note_map:
                 midi_note = self.note_map[note]
                 if midi_note > 0:  # 不是休止符
