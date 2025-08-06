@@ -5,3 +5,4 @@ numpy
 json5
 mido
 python-rtmidi
+pywifi
