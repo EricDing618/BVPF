@@ -1,4 +1,4 @@
-import mmap
+import mmap,chardet
 import pywifi
 from pywifi import const
 import time
@@ -40,14 +40,23 @@ class FuckWifi:
         else:
             print(f"连接 {ssid} 失败!")
             return False
-    def process_text_with_mmap(self, file_path, process_func):
-        with open(file_path, "rb", encoding='utf-8') as f:  # 必须用二进制模式
-            # 创建内存映射（只读模式）
+    def process_text_with_mmap(self, file_path, callback):
+        # 先检测文件编码
+        with open(file_path, 'rb') as f:
+            raw_data = f.read(10000)  # 读取部分内容来检测编码
+            encoding = chardet.detect(raw_data)['encoding']
+        
+        with open(file_path, 'rb') as f:
             with mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as mm:
-                # 逐行读取（返回的是 bytes，需解码）
-                for line in iter(mm.readline, b""):
-                    decoded_line = line.decode("utf-8").strip()  # 解码 + 去除换行
-                    process_func("2577", decoded_line)  # 处理每行
+                for line in iter(mm.readline, b''):
+                    try:
+                        decoded_line = line.decode(encoding).strip()
+                    except UnicodeDecodeError:
+                        # 如果自动检测失败，尝试fallback编码
+                        decoded_line = line.decode("gbk", errors="ignore").strip()
+                    
+                    if decoded_line:
+                        callback('ChinaNet-Long',decoded_line)
 
 if __name__ == "__main__":
     FuckWifi()
