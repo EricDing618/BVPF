@@ -31,7 +31,7 @@ class FuckWifi:
         
         # 尝试连接
         iface.connect(temp_profile)
-        time.sleep(5)  # 等待连接完成
+        #time.sleep(1)  # 等待连接完成
         
         # 检查连接状态
         if iface.status() == const.IFACE_CONNECTED:
