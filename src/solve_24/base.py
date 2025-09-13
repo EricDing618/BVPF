@@ -1,7 +1,9 @@
-import random
+import random, traceback
+from re import findall
 import itertools
 #from fractions import Fraction
 from operator import add, sub, mul, truediv
+from sympy import S
 
 class TwentyFourGenerator:
     """高效的24点数字生成器"""
@@ -114,9 +116,63 @@ class TwentyFourGenerator:
         
         return None
     
+    def validate_answer(self, user_answer:str, numbers:list[int], correct_solution:str):
+        """
+        答案验证接口
+        参数:
+            user_answer: 用户输入的答案字符串
+            numbers: 当前题目的四个数字列表
+            correct_solution: 标准答案字符串
+        
+        返回值:
+            bool: 用户答案是否正确
+        
+        您需要实现这个函数来验证用户的答案
+        这里只是一个示例实现，您需要根据实际需求完善它
+        """
+        replace = {
+            ' ':'',
+            '\n':'',
+            '（':'(',
+            '）':')',
+            '÷':'/'
+        }
+        for old,new in replace.items():
+            user_answer = user_answer.replace(old,new)
+        try:
+            all_numbers = [int(n) for n in findall(r'\d+', user_answer)]
+            print('[DEBUG] user:',all_numbers)
+            validate_str = list(str(i) for i in range(1,14))+['+','-','*','/','(',')']
+            print('[DEBUG] validate_str:',validate_str)
+            if any(i not in validate_str for i in user_answer) or not (strip_ans:=user_answer.strip()):
+                print('[DEBUG] invalid char')
+                #print(f'[DEBUG] user input: {strip_ans}')
+                return False
+            solve_user_answer = S(user_answer)
+            print('[DEBUG] eval:',solve_user_answer)
+            print('[DEBUG] corr:',numbers)
+            print('[DEBUG] corr eval(not sympy):',eval(correct_solution))
+            if sorted(all_numbers)==sorted(numbers) and solve_user_answer == 24:
+                return True
+        except:
+            traceback.print_exc()
+            return False
+        return False
+    
 if __name__=="__main__":
     running = True
     print("Welcome to Solve24 CLI! (Author: EricDing618 & DeepSeek, Version: v0.1.0)")
-    print('Tip: Press "exit to exit')
+    print('Tip: Press "exit" to exit.')
+    generator = TwentyFourGenerator()
     while running:
+        numbers, solution = generator.generate_numbers()
+        print('Four numbers:', numbers)
         user=input('Input: ')
+        if user.lower()=='exit':
+            running = False
+            print('Bye!')
+            break
+        if generator.validate_answer(user, numbers, solution):
+            print('Correct!')
+        else:
+            print('Wrong! The correct answer is:', solution)

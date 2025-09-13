@@ -2,15 +2,13 @@ if __name__ == "__main__":
     from base import TwentyFourGenerator
 else:
     from .base import TwentyFourGenerator
-import sys, traceback
+
+import sys
 
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
                              QHBoxLayout, QLabel, QPushButton, QLineEdit, QFrame)
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
-from sympy import S
-from re import findall
-
 
 class NumberLabel(QLabel):
     """自定义数字标签，带有圆角和颜色"""
@@ -157,7 +155,7 @@ class Solve24Game(QMainWindow):
     def new_problem(self):
         """生成新题目"""
         self.current_numbers, self.current_solution = self.generator.generate_numbers()
-        print(f'=====debug: {self.current_numbers} -> {self.current_solution}')  # 调试输出
+        print(f'[DEBUG] ====={self.current_numbers} -> {self.current_solution}=====')  # 调试输出
         # 更新数字标签
         for i, label in enumerate(self.number_labels):
             label.setText(str(self.current_numbers[i]))
@@ -175,7 +173,7 @@ class Solve24Game(QMainWindow):
         
         # 这里是答案验证接口
         # 您需要实现 validate_answer 函数
-        is_correct = self.validate_answer(user_answer, self.current_numbers, self.current_solution)
+        is_correct = self.generator.validate_answer(user_answer, self.current_numbers, self.current_solution)
         
         # 根据验证结果更新界面
         if is_correct:
@@ -186,46 +184,6 @@ class Solve24Game(QMainWindow):
             self.title_label.setText(f"正解：{self.current_solution}")
             self.title_label.setStyleSheet("color: #F44336;")
             self.answer_input.set_correct(False)
-    
-    def validate_answer(self, user_answer:str, numbers:list[int], correct_solution:str):
-        """
-        答案验证接口
-        参数:
-            user_answer: 用户输入的答案字符串
-            numbers: 当前题目的四个数字列表
-            correct_solution: 标准答案字符串
-        
-        返回值:
-            bool: 用户答案是否正确
-        
-        您需要实现这个函数来验证用户的答案
-        这里只是一个示例实现，您需要根据实际需求完善它
-        """
-        # 示例实现：简单比较用户输入和标准答案
-        # 实际实现应该更复杂，需要验证用户使用了给定的数字
-        # 并且表达式的结果确实等于24
-        replace = {
-            ' ':'',
-            '\n':'',
-            '（':'(',
-            '）':')',
-            '÷':'/'
-        }
-        for old,new in replace.items():
-            user_answer = user_answer.replace(old,new)
-        try:
-            all_numbers = [int(n) for n in findall(r'\d+', user_answer)]
-            print('user:',all_numbers)
-            solve_user_answer = S(user_answer)
-            print('eval:',solve_user_answer)
-            print('corr:',numbers)
-            print('corr eval(not sympy):',eval(correct_solution))
-            if set(all_numbers)==set(numbers) and solve_user_answer == 24:
-                return True
-        except:
-            traceback.print_exc()
-            return False
-        return False
 
 
 if __name__ == "__main__":
