@@ -32,7 +32,7 @@ class AnswerLineEdit(QLineEdit):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setFont(QFont("Microsoft YaHei", 12))
-        self.setPlaceholderText("请输入表达式，如 (6+2)*3。解法可含小数，按回车提交。")
+        self.setPlaceholderText("请输入表达式，如 (6+2)*3。解法可含分数，按回车提交。")
         
         # 设置默认样式
         self.normal_style = """

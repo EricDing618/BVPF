@@ -144,7 +144,7 @@ class TwentyFourGenerator:
             all_numbers = [int(n) for n in findall(r'\d+', user_answer)]
             print('[DEBUG] user:',all_numbers)
             validate_str = list(str(i) for i in range(1,14))+['+','-','*','/','(',')']
-            print('[DEBUG] validate_str:',validate_str)
+            print('[DEBUG] valid_str:',validate_str)
             if any(i not in validate_str for i in user_answer) or not (strip_ans:=user_answer.strip()):
                 print('[DEBUG] invalid char')
                 #print(f'[DEBUG] user input: {strip_ans}')
@@ -162,18 +162,26 @@ class TwentyFourGenerator:
     
 if __name__=="__main__":
     running = True
-    print("Welcome to Solve24 CLI! (Author: EricDing618, Version: v0.1.0)")
-    print('Tip: Press "exit" to exit.')
+    rprint("Welcome to Solve24 CLI! [blue](Author: EricDing618, Version: v0.1.0)[/]")
+    rprint('[bold blue]Tip: Press "exit" to exit.[/]')
     generator = TwentyFourGenerator()
-    while running:
-        numbers, solution = generator.generate_numbers()
-        rprint('[blue]Four numbers:[/]', numbers)
-        user=input('Input: ')
-        if user.lower()=='exit':
-            running = False
-            rprint('[blue]Bye![/]')
-            break
-        if generator.validate_answer(user, numbers, solution):
-            rprint('[green]Correct![/]\nOfficial solution is:', solution+'\n=====')
-        else:
-            rprint('[red]Wrong![/] The correct answer is:', solution+'\n=====')
+    try:
+        while running:
+            1/0
+            numbers, solution = generator.generate_numbers()
+            rprint('[blue]Four numbers:[/]', numbers)
+            user=input('Input: ')
+            if user.lower()=='exit':
+                running = False
+                rprint('[blue]Bye![/]')
+                break
+            if generator.validate_answer(user, numbers, solution):
+                rprint('[green]Correct![/]\nOfficial solution is:', solution+'\n=====')
+            else:
+                rprint('[red]Wrong![/] The correct answer is:', solution+'\n=====')
+    except (EOFError, InterruptedError):
+        rprint('[blue]Bye![/]',end='')
+        input('>>>')
+    except (Exception, BaseException) as e:
+        rprint(f"[red]{traceback.format_exc()}[/]")
+        input('>>>')
