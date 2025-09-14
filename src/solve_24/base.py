@@ -4,6 +4,7 @@ import itertools
 #from fractions import Fraction
 from operator import add, sub, mul, truediv
 from sympy import S
+from rich import print as rprint
 
 class TwentyFourGenerator:
     """高效的24点数字生成器"""
@@ -161,18 +162,18 @@ class TwentyFourGenerator:
     
 if __name__=="__main__":
     running = True
-    print("Welcome to Solve24 CLI! (Author: EricDing618 & DeepSeek, Version: v0.1.0)")
+    print("Welcome to Solve24 CLI! (Author: EricDing618, Version: v0.1.0)")
     print('Tip: Press "exit" to exit.')
     generator = TwentyFourGenerator()
     while running:
         numbers, solution = generator.generate_numbers()
-        print('Four numbers:', numbers)
+        rprint('[blue]Four numbers:[/]', numbers)
         user=input('Input: ')
         if user.lower()=='exit':
             running = False
-            print('Bye!')
+            rprint('[blue]Bye![/]')
             break
         if generator.validate_answer(user, numbers, solution):
-            print('Correct!')
+            rprint('[green]Correct![/]\nOfficial solution is:', solution+'\n=====')
         else:
-            print('Wrong! The correct answer is:', solution)
+            rprint('[red]Wrong![/] The correct answer is:', solution+'\n=====')
