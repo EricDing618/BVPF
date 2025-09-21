@@ -167,7 +167,6 @@ if __name__=="__main__":
     generator = TwentyFourGenerator()
     try:
         while running:
-            1/0
             numbers, solution = generator.generate_numbers()
             rprint('[blue]Four numbers:[/]', numbers)
             user=input('Input: ')
@@ -179,7 +178,7 @@ if __name__=="__main__":
                 rprint('[green]Correct![/]\nOfficial solution is:', solution+'\n=====')
             else:
                 rprint('[red]Wrong![/] The correct answer is:', solution+'\n=====')
-    except (EOFError, InterruptedError):
+    except (EOFError, KeyboardInterrupt):
         rprint('[blue]Bye![/]',end='')
         input('>>>')
     except (Exception, BaseException) as e:

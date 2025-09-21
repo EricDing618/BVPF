@@ -32,7 +32,7 @@ class AnswerLineEdit(QLineEdit):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setFont(QFont("Microsoft YaHei", 12))
-        self.setPlaceholderText("请输入表达式，如 (6+2)*3。解法可含分数，按回车提交。")
+        self.setPlaceholderText("请输入表达式，如 (6+2)*3/1。解法可含分数，按回车提交。")
         
         # 设置默认样式
         self.normal_style = """
@@ -82,7 +82,7 @@ class Solve24Game(QMainWindow):
     def init_ui(self):
         """初始化用户界面"""
         self.setWindowTitle("Solve24 - By EricDing618")
-        self.setMinimumSize(500, 400)
+        self.setMinimumSize(540, 400)
         
         # 设置中心部件和主布局
         central_widget = QWidget()
@@ -187,6 +187,8 @@ class Solve24Game(QMainWindow):
 
 
 if __name__ == "__main__":
+    # 启用高 DPI 缩放
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
     app = QApplication(sys.argv)
     game = Solve24Game()
     game.show()
