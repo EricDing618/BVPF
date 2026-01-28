@@ -2,7 +2,7 @@ import sys,os
 print(os.path.dirname(__file__))
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-import Mods.simpmusic as simpmusic
+import simpmusic as simpmusic
 
 score = [
     '6','1^','2^','3^','2^','0','1^','7','6','7','5','6','0',
